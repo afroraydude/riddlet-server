@@ -1,3 +1,4 @@
+![logo](https://riddletchat.firebaseapp.com/static/media/logo.786543bd.png)
 # riddlet-server
 The server library for Riddlet, the anonymous chat app. A simple, upgradable wrapper for Socket.IO.
 
