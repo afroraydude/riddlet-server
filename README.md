@@ -16,7 +16,7 @@ var http = require('http');
 
 app = http.createServer();
 
-var riddlet = require("./index").Riddlet(app)
+var riddlet = require("riddlet-server").Riddlet(app)
 
 const port = process.env.port || 8080;
 app.listen(port);
@@ -28,7 +28,7 @@ process.on("uncaughtException", function(err) {
 ```
 ### Example #2 - Standalone
 ```javascript
-var riddlet = require("./index").Riddlet() // runs on either process.env.port or 8000
+var riddlet = require("riddlet-server").Riddlet() // runs on either process.env.port or 8000
 
 process.on("uncaughtException", function(err) {
   console.log("Caught exception: ", err);
