@@ -1,6 +1,6 @@
 {
   "name": "riddlet-server",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "The server library for Riddlet, the anonymous chat app and simple, upgradable wrapper for Socket.IO.",
   "author": "afroraydude",
   "main": "index.js",
