@@ -2,8 +2,6 @@ var Riddlet = function(app, adapters) {
   // Setup stuff
   http = require("http");
 
-  require("dotenv").config();
-
   if (app)
     io = require("socket.io")(app);
   else
@@ -27,7 +25,7 @@ var Riddlet = function(app, adapters) {
 
   var ip = require("ip")
 
-  var serverInfo = { version: 10, title: "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", users: 0, isMod: adapters ? true : false };
+  var serverInfo = { version: 10, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", users: 0, isMod: adapters ? true : false };
 
   // check if using custom adapters
   if (serverInfo.isMod === true) {
