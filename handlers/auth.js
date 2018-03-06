@@ -1,4 +1,3 @@
-var Realm = require("realm");
 var FastRateLimit = require("fast-ratelimit").FastRateLimit;
 var jwt = require("jsonwebtoken");
 
