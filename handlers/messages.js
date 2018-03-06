@@ -4,7 +4,6 @@ exports.RiddletMessage = RiddletMessage
 var FastRateLimit = require("fast-ratelimit").FastRateLimit;
 var jwt = require("jsonwebtoken");
 var io, socket, code, serverInfo;
-require("dotenv").config();
 
 var messageLimiter = new FastRateLimit({
   threshold: 5, // available tokens over timespan
