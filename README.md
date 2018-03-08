@@ -37,3 +37,6 @@ process.on("uncaughtException", function(err) {
 ```
 ## Connecting
 Connecting to your server is simple. Just open up the Riddlet web client located [here](https://riddletchat.firebaseapp.com) and enter the URL for for your Riddlet server, including the port if necessary. (ie. `http://123.456.78.90:8080`) then press "Connect to Server"
+
+## Issues
+Report issues to the issues tab on GitHub(go [here](https://github.com/afroraydude/riddlet-server/issues))
