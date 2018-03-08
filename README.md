@@ -5,6 +5,7 @@ The server library for Riddlet, the anonymous chat app. A simple, upgradable wra
 
 ## Installation
 Setup is very simple just `npm install --save riddlet-server`.
+
 **Note**: ensure you have a C++11 compiler available (available in GCC 4.9+). This allows for node-gyp to build the hashtable dependency that fast-ratelimit depends on. (**Windows: you may have to install windows-build-tools globally using: npm install -g windows-build-tools to be able to compile**)
 
 # Usage
