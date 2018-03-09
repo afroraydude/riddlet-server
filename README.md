@@ -58,10 +58,10 @@ Report issues to the issues tab on GitHub (go [here](https://github.com/afrorayd
   * [ ] Allow for usage of sending all messages through an encrypted medium - diffrent keys for different clients
   * [ ] Client key changes each use of server
 * [ ] Major code cleanup
-  * [x] Don't mix semicolons and no semicolons
-  * [x] Switch out most vars with let/const
+  * [ ] Don't mix semicolons and no semicolons
+  * [ ] Switch out most vars with let/const
 * [ ] Small features
   * [ ] Allow for more customization of the Riddlet platform with adapters/plugins
-    * [x] Allow for overriding of the message handler through adapters
+    * [ ] Allow for overriding of the message handler through adapters
     * [ ] Allow for overriding of the authentication system through adapters
   * [ ] Allow for async usage of adapter methods
