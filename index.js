@@ -26,7 +26,7 @@ var Riddlet = function(app, adapters) {
 
   var ip = require("ip")
 
-  var serverInfo = { version: 10, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
+  var serverInfo = { version: 11, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
 
   io.on("connection", socket => {
     // send this no matter what, used in main menu of web app
