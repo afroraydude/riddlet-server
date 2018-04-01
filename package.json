@@ -5,7 +5,7 @@
   "author": "afroraydude",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon serv.js"
   },
   "repository": {
     "type": "git",
@@ -15,9 +15,13 @@
   "dependencies": {
     "after": "^0.8.2",
     "fast-ratelimit": "^2.1.8",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
     "install": "^0.10.4",
     "ip": "^1.1.5",
     "jsonwebtoken": "^8.2.0",
+    "keypair": "^1.0.1",
+    "node-rsa": "^0.4.2",
     "socket.io": "^2.0.4",
     "utf8": "^3.0.0"
   }
