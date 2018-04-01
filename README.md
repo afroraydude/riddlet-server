@@ -4,7 +4,7 @@
 
 The server library for Riddlet, the anonymous chat app. A simple, upgradable wrapper for Socket.IO.
 
-[![Node version](https://img.shields.io/node/v/riddlet-server.svg?style=flat)](http://nodejs.org/download/)
+[![NPM](https://nodei.co/npm/riddlet-server.png)](https://www.npmjs.com/package/riddlet-server)
 
 ## Installation
 
