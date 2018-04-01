@@ -57,10 +57,10 @@ Report issues to the issues tab on GitHub (go [here](https://github.com/afrorayd
 
 ## Planned
 
-* [ ] OTR (Off the record messaging)
-  * [ ] Implement crypto library inside the web app and server
-  * [ ] Allow for usage of sending all messages through an encrypted medium - diffrent keys for different clients
-  * [ ] Client key changes each use of server
+* [x] OTR (Off the record messaging)
+  * [x] Implement crypto library inside the web app and server
+  * [x] Allow for usage of sending all messages through an encrypted medium - diffrent keys for different clients
+  * [ ] ~~Client key changes each use of server~~ (Removed due to redundancy)
 * [ ] Small features
   * [ ] Allow for more customization of the Riddlet platform with adapters/plugins
     * [ ] Allow for overriding of the message handler through adapters
