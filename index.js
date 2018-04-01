@@ -68,7 +68,7 @@ var Riddlet = function(app, adapters) {
         require('./handlers/auth').RiddletReIdentify(io, socket, messages, code, serverInfo, pair.private, pair.public)
       }
       if (isReal) {
-        //message.data = require('./handlers/util').encryptMessage(message.data, socket.key)
+        message.data = require('./handlers/util').decryptMessage(message.data, socket.key)
 
         var messageHandler = require("./handlers/messages").RiddletMessage
         // for each adapter, see if they have a "beforeMessage" function to handle stuff before the message is parsed by

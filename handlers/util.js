@@ -25,7 +25,7 @@ function encryptMessage(message, key) {
 }
 
 function decryptMessage(message, key) {
-  var buffer = new Buffer(message, "base64")
-  var decrypted = crypto.publicDecrypt(key, buffer)
+  const buffer = new Buffer(message, "base64");
+  var decrypted = crypto.publicDecrypt(key, buffer);
   return decrypted.toString("utf8")
 }

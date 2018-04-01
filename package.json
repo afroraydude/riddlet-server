@@ -16,7 +16,6 @@
     "after": "^0.8.2",
     "fast-ratelimit": "^2.1.8",
     "fs": "0.0.1-security",
-    "http": "0.0.0",
     "install": "^0.10.4",
     "ip": "^1.1.5",
     "jsonwebtoken": "^8.2.0",

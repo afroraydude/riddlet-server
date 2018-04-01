@@ -47,7 +47,6 @@ function NormalMessage(message, decoded, privateKey) {
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
             message.client = decoded.name;
-            message.token = null;
             message.color = decoded.color;
             socket.emit("message", {
               id: String(Date.now()),
@@ -73,7 +72,7 @@ function NormalMessage(message, decoded, privateKey) {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
         message.client = decoded.name;
         message.color = decoded.color;
-        message.token = null;
+        message.data = require('./util').encryptMessage(message.data, privateKey)
         io.emit("message", message);
         messages.push(message);
       } else {
