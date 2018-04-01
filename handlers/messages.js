@@ -1,53 +1,53 @@
 
 exports.RiddletMessage = RiddletMessage
 
-var FastRateLimit = require("fast-ratelimit").FastRateLimit;
-var jwt = require("jsonwebtoken");
-var io, socket, code, serverInfo;
+var FastRateLimit = require("fast-ratelimit").FastRateLimit
+var jwt = require("jsonwebtoken")
+var io, socket, code, serverInfo
 
 var messageLimiter = new FastRateLimit({
   threshold: 5, // available tokens over timespan
   ttl: 5 // time-to-live value of token bucket (in seconds)
-});
+})
 
 function RiddletMessage(rio, rsocket, message, messages, rcode, rserverInfo, user, privateKey) {
-  io = rio;
-  socket = rsocket;
-  code = rcode;
-  serverInfo = rserverInfo;
+  io = rio
+  socket = rsocket
+  code = rcode
+  serverInfo = rserverInfo
 
-  var maxmsg = process.env.maxmsg || 15;
+  var maxmsg = process.env.maxmsg || 15
   if (messages.length > maxmsg) {
-    messages.shift();
+    messages.shift()
   }
 
   /** TODO: encrypted sending and recievingh
-      var xx = crypto.createDecipher(algorithm,socket.crypto);
-      var yy = xx.update(message.data, 'hex', 'utf8');
-      message.data = yy;
-   io.emit("message", message);
-   messages.push(message);
+      var xx = crypto.createDecipher(algorithm,socket.crypto)
+      var yy = xx.update(message.data, 'hex', 'utf8')
+      message.data = yy
+   io.emit("message", message)
+   messages.push(message)
    } else {
     */
 
   if (message.data.startsWith("/join")) {
-    JoinMessage(message, privateKey);
+    JoinMessage(message, privateKey)
   } else if (message.data.startsWith("/leave")) {
-    LeaveMessage(message, privateKey);
+    LeaveMessage(message, privateKey)
   } else {
-    NormalMessage(message, user, privateKey);
+    NormalMessage(message, user, privateKey)
   }
 }
 
 function NormalMessage(message, decoded, privateKey) {
-    var namespace = decoded.name;
+    var namespace = decoded.name
     if (process.env.ratelimit === "true") {
       messageLimiter
         .consume(namespace)
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-            message.client = decoded.name;
-            message.color = decoded.color;
+            message.client = decoded.name
+            message.color = decoded.color
             socket.emit("message", {
               id: String(Date.now()),
               client: "Server",
@@ -55,7 +55,7 @@ function NormalMessage(message, decoded, privateKey) {
               room: "#all",
               data:
                   (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
-            });
+            })
           }
         })
         .catch(() => {
@@ -66,15 +66,17 @@ function NormalMessage(message, decoded, privateKey) {
             room: "#all",
             data:
                 (serverInfo.encrypt === "true") ? require('./util').encryptMessage("You have been ratelimited, please wait 5 seconds before messaging again", privateKey) : "You have been ratelimited, please wait 5 seconds before messaging again"
-          });
-        });
+          })
+        })
     } else {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-        message.client = decoded.name;
-        message.color = decoded.color;
-        message.data = require('./util').encryptMessage(message.data, privateKey)
-        io.emit("message", message);
-        messages.push(message);
+        message.client = decoded.name
+        message.color = decoded.color
+        if (serverInfo.encrypt === "true") {
+          message.data = require('./util').encryptMessage(message.data, privateKey)
+          console.log("sending encrypted message")
+        }
+        io.emit("message", message)
       } else {
         socket.emit("message", {
           id: String(Date.now()),
@@ -83,23 +85,23 @@ function NormalMessage(message, decoded, privateKey) {
           room: "#all",
           data:
               (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
-        });
+        })
       }
     }
 }
 
 function JoinMessage(message, key) {
-  var room = message.data.split(" ")[1];
+  var room = message.data.split(" ")[1]
   if (room.startsWith("#")) {
-    socket.emit("join", room);
-    socket.join(room);
+    socket.emit("join", room)
+    socket.join(room)
     socket.emit("message", {
       id: String(Date.now()),
       client: "Server",
       color: "red",
       room: "#all",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage(`You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`, key) : `You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`
-    });
+    })
   } else {
     socket.emit("message", {
       id: String(Date.now()),
@@ -107,22 +109,22 @@ function JoinMessage(message, key) {
       color: "red",
       room: "#all",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage('Rooms must start with the "#" sign (ex: #default)', key) : 'Rooms must start with the "#" sign (ex: #default)'
-    });
+    })
   }
 }
 
 function LeaveMessage(message, key) {
-  var room = message.data.split(" ")[1];
+  var room = message.data.split(" ")[1]
   if (room.startsWith("#")) {
-    socket.emit("leave", room);
-    socket.leave(room);
+    socket.emit("leave", room)
+    socket.leave(room)
     socket.emit("message", {
       id: String(Date.now()),
       client: "Server",
       color: "red",
       room: "#all",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage(`You have left the ${room} room, you have now been switched into another room`, key) : `You have left the ${room} room, you have now been switched into another room`
-    });
+    })
   } else {
     socket.emit("message", {
       id: String(Date.now()),
@@ -130,6 +132,6 @@ function LeaveMessage(message, key) {
       color: "red",
       room: "#all",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage('Rooms must start with the "#" sign (ex: #default)', key) : 'Rooms must start with the "#" sign (ex: #default)'
-    });
+    })
   }
 }

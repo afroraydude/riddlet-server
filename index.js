@@ -26,7 +26,7 @@ var Riddlet = function(app, adapters) {
 
   var ip = require("ip")
 
-  var serverInfo = { version: 10, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: "true" }
+  var serverInfo = { version: 10, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
 
   io.on("connection", socket => {
     // send this no matter what, used in main menu of web app
@@ -47,7 +47,7 @@ var Riddlet = function(app, adapters) {
     socket.on("clientkey", function(key) {
       socket.key = key
       require("./handlers/auth").RiddletKeyHandler(socket, pair.public)
-      socket.emit("messagelist", messages)
+      // TODO: Reimplement message list
     })
 
     // if they disconnect, here's what we do
@@ -68,7 +68,7 @@ var Riddlet = function(app, adapters) {
         require('./handlers/auth').RiddletReIdentify(io, socket, messages, code, serverInfo, pair.private, pair.public)
       }
       if (isReal) {
-        message.data = require('./handlers/util').decryptMessage(message.data, socket.key)
+        if (serverInfo.encrypt == "true") message.data = require('./handlers/util').decryptMessage(message.data, socket.key)
 
         var messageHandler = require("./handlers/messages").RiddletMessage
         // for each adapter, see if they have a "beforeMessage" function to handle stuff before the message is parsed by
