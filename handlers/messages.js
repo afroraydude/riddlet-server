@@ -1,14 +1,16 @@
 
 exports.RiddletMessage = RiddletMessage
-
-var FastRateLimit = require("fast-ratelimit").FastRateLimit
+if (process.env.ratelimit === "true") {
+  var FastRateLimit = require("fast-ratelimit").FastRateLimit
+  var messageLimiter = new FastRateLimit({
+    threshold: 5, // available tokens over timespan
+    ttl: 5 // time-to-live value of token bucket (in seconds)
+  })
+}
 var jwt = require("jsonwebtoken")
 var io, socket, code, serverInfo
 
-var messageLimiter = new FastRateLimit({
-  threshold: 5, // available tokens over timespan
-  ttl: 5 // time-to-live value of token bucket (in seconds)
-})
+
 
 function RiddletMessage(rio, rsocket, message, messages, rcode, rserverInfo, user, privateKey) {
   io = rio
@@ -72,6 +74,7 @@ function NormalMessage(message, decoded, privateKey) {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
         message.client = decoded.name
         message.color = decoded.color
+        message.nickname = decoded.nickname
         if (serverInfo.encrypt === "true") {
           message.data = require('./util').encryptMessage(message.data, privateKey)
           console.log("sending encrypted message")

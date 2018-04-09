@@ -1,4 +1,3 @@
-var FastRateLimit = require("fast-ratelimit").FastRateLimit;
 var jwt = require("jsonwebtoken");
 var fs = require('fs');
 var keypair = require('keypair');
@@ -93,26 +92,43 @@ function RiddletKeyHandler(socket, key) {
   socket.emit('servkey', key);
 }
 
-function RiddletSetNick(socket, nickname) {
+function RiddletSetNick(socket, nickname, code) {
   var decoded;
   try {
     decoded = jwt.verify(socket.token, code);
   } catch (err) {
     // do nothing, they will get a new token
   }
+  var token;
   if (decoded) {
+    socket.emit("message", {
+    id: String(Date.now()),
+    client: "Server",
+    color: "red",
+    room: "#all",
+    data: "Nickname set!"
+    });
     socket.name = decoded.name;
+    decoded.nickname = nickname
     socket.emit("identification", {
       id: decoded.name,
       color: decoded.color,
       nickname: nickname,
       token: jwt.sign(decoded, code)
     });
+    token = jwt.sign({ name: decoded.name, color: decoded.color, nickname: nickname }, code);
   } else {
     socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
     console.log(colorChoice);
-    token = jwt.sign({ name: socket.name, color: colorChoice }, code);
+    socket.emit("message", {
+    id: String(Date.now()),
+    client: "Server",
+    color: "red",
+    room: "#all",
+    data: "Nickname set!"
+    });
+    token = jwt.sign({ name: decoded.name, color: decoded.color, nickname: nickname }, code);
     socket.emit("identification", {
       id: socket.name,
       color: colorChoice,
