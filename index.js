@@ -51,7 +51,11 @@ var Riddlet = function(app, adapters) {
     })
 
     // if they disconnect, here's what we do
-    socket.on("disconnect", function() {
+    socket.on("disconnect", function(nick) {
+    })
+    
+    socket.on("setnick", function(nick) {
+      require('./handlers/auth').RiddletSetNick(socket, nick)
     })
 
     // for any generic message given by user input instead of client programming, here's what we do
