@@ -123,6 +123,7 @@ function RiddletSetNick(socket, nickname) {
   socket.token = token
 }
 
+exports.RiddletSetNick = RiddletSetNick
 exports.RiddletReIdentify = RiddletReIdentify
 exports.RiddletNonIdentification = RiddletNonIdentification
 exports.RiddletIdentification = RiddletIdentification
