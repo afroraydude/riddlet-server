@@ -48,16 +48,28 @@ function NormalMessage(message, decoded, privateKey) {
         .consume(namespace)
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-            message.client = decoded.name
-            message.color = decoded.color
+            message.client = decoded.name;
+            message.color = decoded.color;
+            message.nickname = decoded.nickname;
+            if (serverInfo.encrypt === "true") {
+              message.data = require("./util").encryptMessage(message.data, privateKey);
+              console.log("sending encrypted message");
+            }
+            io.emit("message", message);
+          } else {
             socket.emit("message", {
               id: String(Date.now()),
               client: "Server",
               color: "red",
               room: "#all",
               data:
-                  (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
-            })
+                serverInfo.encrypt === "true"
+                  ? require("./util").encryptMessage(
+                      "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')",
+                      privateKey
+                    )
+                  : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+            });
           }
         })
         .catch(() => {

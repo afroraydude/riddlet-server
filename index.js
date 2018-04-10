@@ -22,14 +22,6 @@ var Riddlet = function(app, adapters) {
 
   var serverInfo = { version: 12.1, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
 
-  if (process.env.ratelimit === "true") {
-  var FastRateLimit = require("fast-ratelimit").FastRateLimit
-  var messageLimiter = new FastRateLimit({
-    threshold: 5, // available tokens over timespan
-    ttl: 5 // time-to-live value of token bucket (in seconds)
-  })
-}
-
   io.on("connection", socket => {
     // send this no matter what, used in main menu of web app
     socket.emit("serverinfo", serverInfo)
