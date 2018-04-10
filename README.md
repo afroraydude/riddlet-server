@@ -50,7 +50,7 @@ process.on("uncaughtException", function(err) {
 
 ## Connecting
 
-Connecting to your server is simple. Just open up the Riddlet web client located [here](https://riddletchat.firebaseapp.com) and enter the URL for for your Riddlet server, including the port if necessary. (ie. `http://123.456.78.90:8080`) then press "Connect to Server"
+Connecting to your server is simple. Just open up the Riddlet web client located [here](https://chat.afroraydude.com) and enter the URL for for your Riddlet server, including the port if necessary. (ie. `http://123.456.78.90:8080`) then press "Connect to Server"
 
 ## Issues
 Report issues to the issues tab on GitHub (go [here](https://github.com/afroraydude/riddlet-server/issues))
@@ -66,3 +66,5 @@ Report issues to the issues tab on GitHub (go [here](https://github.com/afrorayd
     * [ ] Allow for overriding of the message handler through adapters
     * [ ] Allow for overriding of the authentication system through adapters
   * [ ] Allow for async usage of adapter methods
+* [x] Nicknames
+* [ ] Custom avatars
