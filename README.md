@@ -6,7 +6,7 @@ The server library for Riddlet, the anonymous chat app. A simple, upgradable wra
 
 [![NPM](https://nodei.co/npm/riddlet-server.png)](https://www.npmjs.com/package/riddlet-server)
 
-[![docs version](https://img.shields.io/badge/docs%20version-v0.12.3-orange.svg)](http://riddlet-docs.afroraydude.com) 
+[![docs version](https://img.shields.io/badge/docs%20version-v0.12.3-orange.svg)](http://riddlet-docs.afroraydude.com) [![Coverage Status](https://coveralls.io/repos/github/afroraydude/riddlet-server/badge.svg?branch=master)](https://coveralls.io/github/afroraydude/riddlet-server?branch=master) [![Build Status](https://travis-ci.org/afroraydude/riddlet-server.svg?branch=master)](https://travis-ci.org/afroraydude/riddlet-server)
 
 [Go to docs](http://riddlet-docs.afroraydude.com)
 
