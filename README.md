@@ -6,15 +6,15 @@ The server library for Riddlet, the anonymous chat app. A simple, upgradable wra
 
 [![NPM](https://nodei.co/npm/riddlet-server.png)](https://www.npmjs.com/package/riddlet-server)
 
-[![docs version](https://img.shields.io/badge/docs%20version-v0.11.2-orange.svg)](http://riddlet-docs.afroraydude.com)
+[![docs version](https://img.shields.io/badge/docs%20version-v0.12.3-orange.svg)](http://riddlet-docs.afroraydude.com) 
 
-
+[Go to docs](http://riddlet-docs.afroraydude.com)
 
 ## Installation
 
 Setup is very simple just `npm install --save riddlet-server`.
 
-**Note**: nsure you have a C++11 compiler available (available in GCC 4.9+). This allows for node-gyp to build the hashtable dependency that fast-ratelimit depends on. (*Windows: you may have to install build tools globally using: `npm install -g windows-build-tools` to be able to compile*)
+**Note**: nsure you have a C++11 compiler available (available in GCC 4.9+). This allows for node-gyp to build the hashtable dependency that fast-ratelimit and riddlet depends on. (*Windows: you may have to install build tools globally using: `npm install -g windows-build-tools` to be able to compile*)
 
 ## Usage
 
@@ -68,3 +68,4 @@ Report issues to the issues tab on GitHub (go [here](https://github.com/afrorayd
   * [ ] Allow for async usage of adapter methods
 * [x] Nicknames
 * [ ] Custom avatars
+* [ ] Private messaging
