@@ -5,7 +5,7 @@
   "author": "afroraydude",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon serv.js"
+    "test": "node index.js"
   },
   "repository": {
     "type": "git",
