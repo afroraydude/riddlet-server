@@ -20,7 +20,7 @@ var Riddlet = function(app, adapters) {
 
   var ip = require("ip")
 
-  var serverInfo = { version: 12.1, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
+  var serverInfo = { version: 12.3, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
 
   io.on("connection", socket => {
     // send this no matter what, used in main menu of web app
@@ -53,6 +53,30 @@ var Riddlet = function(app, adapters) {
       console.log("nick")
     })
 
+    /** TODO: This 
+    socket.on("whisper", function(message) {
+      var isReal = false
+      try {
+        // check if they are using a valid token given by this server
+        var user = jwt.verify(socket.token, code)
+        // if so, change value to true
+        isReal = true
+      } catch(err) {
+        // give them a new token
+        require('./handlers/auth').RiddletReIdentify(io, socket, messages, code, serverInfo, pair.private, pair.public)
+      }
+      if (isReal) {
+        function isClient(rsocket) {
+          return rsocket.name === message.reciever
+        }
+        var reciever = io.sockets.find(isClient)
+        if (reciever)
+          require("./handlers/messages").RedditDM(message, user, pair.private, reciever)
+        else
+          socket.emit("message", { id: String(Date.now()),client: "Server",color: "red",room: "#all",data:"User not found"});
+      }
+    })
+    */
     // for any generic message given by user input instead of client programming, here's what we do
     socket.on("message", function(message) {
       // if the user is a real user and is properly authenticated, default false

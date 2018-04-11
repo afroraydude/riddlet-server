@@ -1,5 +1,6 @@
 
 exports.RiddletMessage = RiddletMessage
+exports.RedditDM = PrivateMessage
 if (process.env.ratelimit === "true") {
   var FastRateLimit = require("fast-ratelimit").FastRateLimit
   var messageLimiter = new FastRateLimit({
@@ -92,6 +93,70 @@ function NormalMessage(message, decoded, privateKey) {
           console.log("sending encrypted message")
         }
         io.emit("message", message)
+      } else {
+        socket.emit("message", {
+          id: String(Date.now()),
+          client: "Server",
+          color: "red",
+          room: "#all",
+          data:
+              (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+        })
+      }
+    }
+}
+
+function PrivateMessage(message, decoded, privateKey, client) {
+    var namespace = decoded.name
+    if (process.env.ratelimit === "true") {
+      messageLimiter
+        .consume(namespace)
+        .then(() => {
+          if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
+            message.client = decoded.name;
+            message.color = decoded.color;
+            message.nickname = decoded.nickname;
+            if (serverInfo.encrypt === "true") {
+              message.data = require("./util").encryptMessage(message.data, privateKey);
+              console.log("sending encrypted message");
+            }
+            io.emit("message", message);
+          } else {
+            socket.emit("message", {
+              id: String(Date.now()),
+              client: "Server",
+              color: "red",
+              room: "#all",
+              data:
+                serverInfo.encrypt === "true"
+                  ? require("./util").encryptMessage(
+                      "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')",
+                      privateKey
+                    )
+                  : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+            });
+          }
+        })
+        .catch(() => {
+          socket.emit("message", {
+            id: String(Date.now()),
+            client: "Server",
+            color: "red",
+            room: "#all",
+            data:
+                (serverInfo.encrypt === "true") ? require('./util').encryptMessage("You have been ratelimited, please wait 5 seconds before messaging again", privateKey) : "You have been ratelimited, please wait 5 seconds before messaging again"
+          })
+        })
+    } else {
+      if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
+        message.client = decoded.name
+        message.color = decoded.color
+        message.nickname = decoded.nickname
+        if (serverInfo.encrypt === "true") {
+          message.data = require('./util').encryptMessage(message.data, privateKey)
+          console.log("sending encrypted message")
+        }
+        client.emit("message", message)
       } else {
         socket.emit("message", {
           id: String(Date.now()),
