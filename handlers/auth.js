@@ -38,6 +38,7 @@ function RiddletIdentification(token, io, socket, messages, code, serverInfo, pr
     client: "Server",
     color: "red",
     room: "#all",
+    nickname: "Riddlet",
     data:
         (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Welcome!", privateKey) : "Welcome!"
   });
@@ -62,6 +63,7 @@ function RiddletNonIdentification(io, socket, messages, code, serverInfo, privat
       client: "Server",
       color: "red",
       room: "#all",
+      nickname: "Riddlet",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Welcome!", privateKey) : "Welcome!"
     });
     socket.emit("version", serverInfo.version);
@@ -81,6 +83,7 @@ function RiddletReIdentify(io, socket, messages, code, serverInfo, privateKey, p
     client: "Server",
     color: "red",
     room: "#all",
+    nickname: "Riddlet",
     data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Your user data was corrupted, you have been re-registered with new data.", privateKey) : "Your user data was corrupted, you have been re-registered with new data."
   });
   socket.emit("version", serverInfo.version);
@@ -106,6 +109,7 @@ function RiddletSetNick(socket, nickname, code) {
     client: "Server",
     color: "red",
     room: "#all",
+    nickname: "Riddlet",
     data: "Nickname set!"
     });
     socket.name = decoded.name;
@@ -126,6 +130,7 @@ function RiddletSetNick(socket, nickname, code) {
     client: "Server",
     color: "red",
     room: "#all",
+    nickname: "Riddlet",
     data: "Nickname set!"
     });
     token = jwt.sign({ name: decoded.name, color: decoded.color, nickname: nickname }, code);
