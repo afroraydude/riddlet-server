@@ -62,6 +62,7 @@ function NormalMessage(message, decoded, privateKey) {
               id: String(Date.now()),
               client: "Server",
               color: "red",
+              nickname: "Riddlet",
               room: "#all",
               data:
                 serverInfo.encrypt === "true"
@@ -77,6 +78,7 @@ function NormalMessage(message, decoded, privateKey) {
           socket.emit("message", {
             id: String(Date.now()),
             client: "Server",
+            nickname: "Riddlet",
             color: "red",
             room: "#all",
             data:
@@ -99,6 +101,7 @@ function NormalMessage(message, decoded, privateKey) {
           client: "Server",
           color: "red",
           room: "#all",
+          nickname: "Riddlet",
           data:
               (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
         })
@@ -127,6 +130,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
               client: "Server",
               color: "red",
               room: "#all",
+              nickname: "Riddlet",
               data:
                 serverInfo.encrypt === "true"
                   ? require("./util").encryptMessage(
@@ -143,6 +147,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
             client: "Server",
             color: "red",
             room: "#all",
+            nickname: "Riddlet",
             data:
                 (serverInfo.encrypt === "true") ? require('./util').encryptMessage("You have been ratelimited, please wait 5 seconds before messaging again", privateKey) : "You have been ratelimited, please wait 5 seconds before messaging again"
           })
@@ -163,6 +168,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
           client: "Server",
           color: "red",
           room: "#all",
+          nickname: "Riddlet",
           data:
               (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
         })
@@ -180,6 +186,7 @@ function JoinMessage(message, key) {
       client: "Server",
       color: "red",
       room: "#all",
+      nickname: "Riddlet",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage(`You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`, key) : `You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`
     })
   } else {
@@ -187,6 +194,7 @@ function JoinMessage(message, key) {
       id: String(Date.now()),
       client: "Server",
       color: "red",
+      nickname: "Riddlet",
       room: "#all",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage('Rooms must start with the "#" sign (ex: #default)', key) : 'Rooms must start with the "#" sign (ex: #default)'
     })
@@ -203,6 +211,7 @@ function LeaveMessage(message, key) {
       client: "Server",
       color: "red",
       room: "#all",
+      nickname: "Riddlet",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage(`You have left the ${room} room, you have now been switched into another room`, key) : `You have left the ${room} room, you have now been switched into another room`
     })
   } else {
@@ -210,6 +219,7 @@ function LeaveMessage(message, key) {
       id: String(Date.now()),
       client: "Server",
       color: "red",
+      nickname: "Riddlet",
       room: "#all",
       data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage('Rooms must start with the "#" sign (ex: #default)', key) : 'Rooms must start with the "#" sign (ex: #default)'
     })
