@@ -68,4 +68,4 @@ Report issues to the issues tab on GitHub (go [here](https://github.com/afrorayd
   * [ ] Allow for async usage of adapter methods
 * [x] Nicknames
 * [ ] Custom avatars
-* [ ] Private messaging
+* [x] Private messaging
