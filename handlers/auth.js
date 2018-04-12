@@ -5,7 +5,7 @@ var path = require('path');
 
 colors = ["black", "blue", "green", "orange", "sienna", "coral", "purple", "gold", "royalblue", "silver", "olive", "orchid"];
 
-var makeid = require('./util').randtext
+var makeid = require('./util').generateName
 
 function RiddletIdentification(token, io, socket, messages, code, serverInfo, privateKey, publicKey) {
   this.RiddletKeyHandler(socket, publicKey);
@@ -26,7 +26,7 @@ function RiddletIdentification(token, io, socket, messages, code, serverInfo, pr
     socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
     console.log(colorChoice);
-    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: null }, code);
+    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name }, code);
     socket.emit("identification", {
       id: socket.name,
       color: colorChoice,
@@ -52,7 +52,7 @@ function RiddletNonIdentification(io, socket, messages, code, serverInfo, privat
   this.RiddletKeyHandler(socket, publicKey);
   socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: null }, code);
+    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name }, code);
     socket.emit("identification", {
       id: socket.name,
       color: colorChoice,
@@ -76,7 +76,7 @@ function RiddletReIdentify(io, socket, messages, code, serverInfo, privateKey, p
   var x = makeid(15);
   socket.name = x;
   var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-  token = jwt.sign({ id: socket.name, color: colorChoice, nickname: null }, code);
+  token = jwt.sign({ id: socket.name, color: colorChoice, nickname: socket.name }, code);
   socket.emit("identification", { id: x, color: colorChoice, token: token });
   socket.emit("message", {
     id: String(Date.now()),
