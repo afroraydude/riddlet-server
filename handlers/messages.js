@@ -118,7 +118,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
             message.client = decoded.name;
             message.color = decoded.color;
-            message.nickname = decoded.nickname;
+            message.nickname = "(whisper) " + decoded.nickname;
             message.room = "#all";
             message.id = Date.now()
             if (serverInfo.encrypt === "true") {
@@ -158,7 +158,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
         message.client = decoded.name;
         message.color = decoded.color;
-        message.nickname = decoded.nickname;
+        message.nickname = "(whisper) " + decoded.nickname;
         message.room = "#all";
         message.id = Date.now()
         if (serverInfo.encrypt === "true") {
