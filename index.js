@@ -8,6 +8,8 @@ var Riddlet = function(app, adapters) {
   else
     io = require("socket.io")()
 
+  var users = []
+
   var crypto = require("crypto")
   var algorithm = "aes-256-ctr"
   var jwt = require("jsonwebtoken")
@@ -28,13 +30,13 @@ var Riddlet = function(app, adapters) {
 
     // if user has been on this server before, they should send 'identification' with a token attached. Here's what parses it
     socket.on("identification", function(token) {
-      require("./handlers/auth").RiddletIdentification(token, io, socket, messages, code, serverInfo, pair.private, pair.public)
+      require("./handlers/auth").RiddletIdentification(token, io, socket, messages, code, serverInfo, pair.private, pair.public, users)
       socket.didauth = true
     })
 
     // If they haven't been on this server before, here's what we do
     socket.on("noid", function() {
-      require("./handlers/auth").RiddletNonIdentification(io, socket, messages, code, serverInfo, pair.private, pair.public)
+      require("./handlers/auth").RiddletNonIdentification(io, socket, messages, code, serverInfo, pair.private, pair.public, users)
       socket.didauth = true
     })
 
@@ -45,7 +47,15 @@ var Riddlet = function(app, adapters) {
     })
 
     // if they disconnect, here's what we do
-    socket.on("disconnect", function(nick) {
+    socket.on("disconnect", function() {
+      function isClient(rsocket) {
+        return rsocket.id === socket.id
+      }
+      console.log(users)
+      const user = users.find(isClient)
+      var index = users.indexOf(user)
+      users.splice(index, 1)
+      console.log(users)
     })
     
     socket.on("nick", function(nick) {
@@ -88,7 +98,7 @@ var Riddlet = function(app, adapters) {
         isReal = true
       } catch(err) {
         // give them a new token
-        require('./handlers/auth').RiddletReIdentify(io, socket, messages, code, serverInfo, pair.private, pair.public)
+        require('./handlers/auth').RiddletReIdentify(io, socket, messages, code, serverInfo, pair.private, pair.public, users)
       }
       if (isReal) {
         if (serverInfo.encrypt == "true") message.data = require('./handlers/util').decryptMessage(message.data, socket.key)

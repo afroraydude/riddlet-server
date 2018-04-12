@@ -7,7 +7,7 @@ colors = ["black", "blue", "green", "orange", "sienna", "coral", "purple", "gold
 
 var makeid = require('./util').generateName
 
-function RiddletIdentification(token, io, socket, messages, code, serverInfo, privateKey, publicKey) {
+function RiddletIdentification(token, io, socket, messages, code, serverInfo, privateKey, publicKey, users) {
   this.RiddletKeyHandler(socket, publicKey);
   var decoded;
   try {
@@ -46,9 +46,11 @@ function RiddletIdentification(token, io, socket, messages, code, serverInfo, pr
   serverInfo.users++;
   socket.join("#default");
   socket.token = token
+  var user = {name: socket.name, id: socket.id}
+  users.push(user)
 }
 
-function RiddletNonIdentification(io, socket, messages, code, serverInfo, privateKey, publicKey) {
+function RiddletNonIdentification(io, socket, messages, code, serverInfo, privateKey, publicKey, users) {
   this.RiddletKeyHandler(socket, publicKey);
   socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
@@ -69,9 +71,11 @@ function RiddletNonIdentification(io, socket, messages, code, serverInfo, privat
     socket.emit("version", serverInfo.version);
     serverInfo.users++;
     socket.token = token
+    var user = {name: socket.name, id: socket.id}
+    users.push(user)
   }
 
-function RiddletReIdentify(io, socket, messages, code, serverInfo, privateKey, publicKey) {
+function RiddletReIdentify(io, socket, messages, code, serverInfo, privateKey, publicKey, users) {
   this.RiddletKeyHandler(socket, publicKey);
   var x = makeid(15);
   socket.name = x;
@@ -89,6 +93,8 @@ function RiddletReIdentify(io, socket, messages, code, serverInfo, privateKey, p
   socket.emit("version", serverInfo.version);
   socket.join("#default");
   socket.token = token
+  var user = {name: socket.name, id: socket.id}
+  users.push(user)
 }
 
 function RiddletKeyHandler(socket, key) {
