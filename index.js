@@ -63,7 +63,6 @@ var Riddlet = function(app, adapters) {
       console.log("nick")
     })
 
-    /** TODO: This 
     socket.on("whisper", function(message) {
       var isReal = false
       try {
@@ -79,14 +78,14 @@ var Riddlet = function(app, adapters) {
         function isClient(rsocket) {
           return rsocket.name === message.reciever
         }
-        var reciever = io.sockets.find(isClient)
+        var reciever = users.find(isClient)
         if (reciever)
           require("./handlers/messages").RedditDM(message, user, pair.private, reciever)
         else
           socket.emit("message", { id: String(Date.now()),client: "Server",color: "red",room: "#all",data:"User not found"});
       }
     })
-    */
+
     // for any generic message given by user input instead of client programming, here's what we do
     socket.on("message", function(message) {
       // if the user is a real user and is properly authenticated, default false

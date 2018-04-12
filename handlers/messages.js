@@ -119,11 +119,13 @@ function PrivateMessage(message, decoded, privateKey, client) {
             message.client = decoded.name;
             message.color = decoded.color;
             message.nickname = decoded.nickname;
+            message.room = "#all";
+            message.id = Date.now()
             if (serverInfo.encrypt === "true") {
               message.data = require("./util").encryptMessage(message.data, privateKey);
               console.log("sending encrypted message");
             }
-            io.emit("message", message);
+            io.to(client.id).emit("message", message);
           } else {
             socket.emit("message", {
               id: String(Date.now()),
@@ -154,14 +156,16 @@ function PrivateMessage(message, decoded, privateKey, client) {
         })
     } else {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-        message.client = decoded.name
-        message.color = decoded.color
-        message.nickname = decoded.nickname
+        message.client = decoded.name;
+        message.color = decoded.color;
+        message.nickname = decoded.nickname;
+        message.room = "#all";
+        message.id = Date.now()
         if (serverInfo.encrypt === "true") {
           message.data = require('./util').encryptMessage(message.data, privateKey)
           console.log("sending encrypted message")
         }
-        client.emit("message", message)
+        io.to(client.id).emit("message", message);
       } else {
         socket.emit("message", {
           id: String(Date.now()),
