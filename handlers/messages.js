@@ -1,3 +1,4 @@
+const riddletMessage = require('riddlet-core').RiddletMessage
 
 exports.RiddletMessage = RiddletMessage
 exports.RedditDM = PrivateMessage
@@ -49,11 +50,8 @@ function NormalMessage(message, decoded, privateKey) {
         .consume(namespace)
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-            message.client = decoded.name;
-            message.color = decoded.color;
-            message.nickname = decoded.nickname;
             if (serverInfo.encrypt === "true") {
-              message.data = require("./util").encryptMessage(message.data, privateKey);
+              message.encrypt(privateKey)
               console.log("sending encrypted message");
             }
             io.emit("message", message);
@@ -87,11 +85,8 @@ function NormalMessage(message, decoded, privateKey) {
         })
     } else {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-        message.client = decoded.name
-        message.color = decoded.color
-        message.nickname = decoded.nickname
         if (serverInfo.encrypt === "true") {
-          message.data = require('./util').encryptMessage(message.data, privateKey)
+          message.encrypt(privateKey)
           console.log("sending encrypted message")
         }
         io.emit("message", message)
@@ -107,6 +102,7 @@ function NormalMessage(message, decoded, privateKey) {
         })
       }
     }
+    console.log(message)
 }
 
 function PrivateMessage(message, decoded, privateKey, client) {
@@ -116,13 +112,10 @@ function PrivateMessage(message, decoded, privateKey, client) {
         .consume(namespace)
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-            message.client = decoded.name;
-            message.color = decoded.color;
-            message.nickname = "(whisper) " + decoded.nickname;
-            message.room = "#all";
-            message.id = Date.now()
+            message = new riddletMessage(message.data, message.room, decoded)
+            console.log(message)
             if (serverInfo.encrypt === "true") {
-              message.data = require("./util").encryptMessage(message.data, privateKey);
+              message.encrypt(privateKey)
               console.log("sending encrypted message");
             }
             io.to(client.id).emit("message", message);
@@ -156,14 +149,10 @@ function PrivateMessage(message, decoded, privateKey, client) {
         })
     } else {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-        message.client = decoded.name;
-        message.color = decoded.color;
-        message.nickname = "(whisper) " + decoded.nickname;
-        message.room = "#all";
-        message.id = Date.now()
+        message = new riddletMessage(message.data, message.room, decoded)
         if (serverInfo.encrypt === "true") {
-          message.data = require('./util').encryptMessage(message.data, privateKey)
-          console.log("sending encrypted message")
+          message.encrypt(privateKey)
+          console.log("sending encrypted message");
         }
         io.to(client.id).emit("message", message);
       } else {

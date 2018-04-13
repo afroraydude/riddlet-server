@@ -1,7 +1,7 @@
 var Riddlet = function(app, adapters) {
-  var keypair = require('keypair')
 
-  var pair = keypair()
+  const keypair = require('keypair')
+  const pair = keypair()
 
   if (app)
     io = require("socket.io")(app)
@@ -44,6 +44,11 @@ var Riddlet = function(app, adapters) {
       socket.key = key
       require("./handlers/auth").RiddletKeyHandler(socket, pair.public)
       // TODO: Reimplement message list
+    })
+
+    socket.on("setimg", function(url) {
+      if (url.length > 0 && url.length !== " ")
+        require('./handlers/auth').RiddletSetImage(socket, url, code)
     })
 
     // if they disconnect, here's what we do
@@ -101,7 +106,10 @@ var Riddlet = function(app, adapters) {
         require('./handlers/auth').RiddletReIdentify(io, socket, messages, code, serverInfo, pair.private, pair.public, users)
       }
       if (isReal) {
-        if (serverInfo.encrypt == "true") message.data = require('./handlers/util').decryptMessage(message.data, socket.key)
+        const riddletMessage = require('riddlet-core').RiddletMessage
+        message = new riddletMessage(message.data, message.room, jwt.decode(socket.token))
+        console.log(message)
+        if (serverInfo.encrypt == "true") message.decrypt(socket.key)
 
         var messageHandler = require("./handlers/messages").RiddletMessage
         // for each adapter, see if they have a "beforeMessage" function to handle stuff before the message is parsed by

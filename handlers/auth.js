@@ -2,6 +2,9 @@ var jwt = require("jsonwebtoken");
 var fs = require('fs');
 var keypair = require('keypair');
 var path = require('path');
+const riddletMessage = require('riddlet-core').RiddletMessage
+const riddletUser = require('riddlet-core').RiddletUser
+const serverUser = new riddletUser("Server", "Riddlet", "red", null, null)
 
 colors = ["black", "blue", "green", "orange", "sienna", "coral", "purple", "gold", "royalblue", "silver", "olive", "orchid"];
 
@@ -26,22 +29,18 @@ function RiddletIdentification(token, io, socket, messages, code, serverInfo, pr
     socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
     console.log(colorChoice);
-    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name }, code);
+
+    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name, img: null }, code);
     socket.emit("identification", {
       id: socket.name,
       color: colorChoice,
       token: token
     });
   }
-  socket.emit("message", {
-    id: String(Date.now()),
-    client: "Server",
-    color: "red",
-    room: "#all",
-    nickname: "Riddlet",
-    data:
-        (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Welcome!", privateKey) : "Welcome!"
-  });
+  var message = new riddletMessage('Welcome!', "#all", serverUser)
+  if (serverInfo.encrypt === "true")
+    message.encrypt(privateKey)
+  socket.emit("message", message);
   socket.emit("version", serverInfo.version);
   serverInfo.users++;
   socket.join("#default");
@@ -54,20 +53,16 @@ function RiddletNonIdentification(io, socket, messages, code, serverInfo, privat
   this.RiddletKeyHandler(socket, publicKey);
   socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name }, code);
+    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name, img: null }, code);
     socket.emit("identification", {
       id: socket.name,
       color: colorChoice,
       token: token
     });
-    socket.emit("message", {
-      id: String(Date.now()),
-      client: "Server",
-      color: "red",
-      room: "#all",
-      nickname: "Riddlet",
-      data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Welcome!", privateKey) : "Welcome!"
-    });
+  var message = new riddletMessage('Welcome!', "#all", serverUser)
+  if (serverInfo.encrypt === "true")
+    message.encrypt(privateKey)
+  socket.emit("message", message);
     socket.emit("version", serverInfo.version);
     serverInfo.users++;
     socket.token = token
@@ -80,16 +75,12 @@ function RiddletReIdentify(io, socket, messages, code, serverInfo, privateKey, p
   var x = makeid(15);
   socket.name = x;
   var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-  token = jwt.sign({ id: socket.name, color: colorChoice, nickname: socket.name }, code);
+  token = jwt.sign({ id: socket.name, color: colorChoice, nickname: socket.name, img: null }, code);
   socket.emit("identification", { id: x, color: colorChoice, token: token });
-  socket.emit("message", {
-    id: String(Date.now()),
-    client: "Server",
-    color: "red",
-    room: "#all",
-    nickname: "Riddlet",
-    data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Your user data was corrupted, you have been re-registered with new data.", privateKey) : "Your user data was corrupted, you have been re-registered with new data."
-  });
+  var message = new riddletMessage('Welcome!', "#all", serverUser)
+  if (serverInfo.encrypt === "true")
+    message.encrypt(privateKey)
+  socket.emit("message", message);
   socket.emit("version", serverInfo.version);
   socket.join("#default");
   socket.token = token
@@ -130,20 +121,64 @@ function RiddletSetNick(socket, nickname, code) {
   } else {
     socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-    console.log(colorChoice);
-    socket.emit("message", {
-    id: String(Date.now()),
-    client: "Server",
-    color: "red",
-    room: "#all",
-    nickname: "Riddlet",
-    data: "Nickname set!"
-    });
+    var message = new riddletMessage('Nickname set!', "#all", serverUser)
+    if (serverInfo.encrypt === "true")
+      message.encrypt(privateKey)
+    socket.emit("message", message);
     token = jwt.sign({ name: decoded.name, color: decoded.color, nickname: nickname }, code);
     socket.emit("identification", {
       id: socket.name,
       color: colorChoice,
       nickname: nickname,
+      img: null,
+      token: token
+    });
+  }
+  socket.token = token
+}
+
+function RiddletSetImage(socket, nickname, code) {
+  var decoded;
+  try {
+    decoded = jwt.verify(socket.token, code);
+  } catch (err) {
+    // do nothing, they will get a new token
+  }
+  var token;
+  if (decoded) {
+    socket.emit("message", {
+      id: String(Date.now()),
+      client: "Server",
+      color: "red",
+      room: "#all",
+      nickname: "Riddlet",
+      data: "Image set!"
+    });
+    socket.name = decoded.name;
+    decoded.img = nickname
+    socket.emit("identification", {
+      id: decoded.name,
+      color: decoded.color,
+      token: jwt.sign(decoded, code)
+    });
+    token = jwt.sign({ name: decoded.name, color: decoded.color, nickname: decoded.nickname, img: nickname }, code);
+  } else {
+    socket.name = makeid(15);
+    var colorChoice = colors[Math.floor(Math.random() * colors.length)];
+    socket.emit("message", {
+      id: String(Date.now()),
+      client: "Server",
+      color: "red",
+      room: "#all",
+      nickname: "Riddlet",
+      data: "Image set!"
+    });
+    token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name, img: nickname }, code);
+    socket.emit("identification", {
+      id: socket.name,
+      color: colorChoice,
+      nickname: socket.name,
+      img: nickname,
       token: token
     });
   }
@@ -155,3 +190,4 @@ exports.RiddletReIdentify = RiddletReIdentify
 exports.RiddletNonIdentification = RiddletNonIdentification
 exports.RiddletIdentification = RiddletIdentification
 exports.RiddletKeyHandler = RiddletKeyHandler
+exports.RiddletSetImage = RiddletSetImage
