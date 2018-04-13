@@ -60,13 +60,7 @@ function NormalMessage(message, decoded, privateKey) {
               color: "red",
               nickname: "Riddlet",
               room: "#all",
-              data:
-                serverInfo.encrypt === "true"
-                  ? require("./util").encryptMessage(
-                      "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')",
-                      privateKey
-                    )
-                  : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+              data:"Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
             });
           }
         })
@@ -77,8 +71,7 @@ function NormalMessage(message, decoded, privateKey) {
             nickname: "Riddlet",
             color: "red",
             room: "#all",
-            data:
-                (serverInfo.encrypt === "true") ? require('./util').encryptMessage("You have been ratelimited, please wait 5 seconds before messaging again", privateKey) : "You have been ratelimited, please wait 5 seconds before messaging again"
+            data:"You have been ratelimited, please wait 5 seconds before messaging again"
           })
         })
     } else {
@@ -94,8 +87,7 @@ function NormalMessage(message, decoded, privateKey) {
           color: "red",
           room: "#all",
           nickname: "Riddlet",
-          data:
-              (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+          data:"Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
         })
       }
     }
@@ -108,9 +100,11 @@ function PrivateMessage(message, decoded, privateKey, client) {
         .consume(namespace)
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-            message = new riddletMessage(message.data, message.room, decoded)
+            message = new riddletMessage(message.data, "#all", decoded)
+
+            message.nickname += " (whisper)"
             if (serverInfo.encrypt === "true") {
-              message.encrypt(privateKey)
+              //message.encrypt(privateKey)
             }
             io.to(client.id).emit("message", message);
           } else {
@@ -120,13 +114,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
               color: "red",
               room: "#all",
               nickname: "Riddlet",
-              data:
-                serverInfo.encrypt === "true"
-                  ? require("./util").encryptMessage(
-                      "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')",
-                      privateKey
-                    )
-                  : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+              data:"Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
             });
           }
         })
@@ -142,16 +130,13 @@ function PrivateMessage(message, decoded, privateKey, client) {
         })
     } else {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-        console.log(decoded)
 
         message = new riddletMessage(message.data, "#all", decoded)
 
         message.nickname += " (whisper)"
-        console.log(message)
         if (serverInfo.encrypt === "true") {
           //message.encrypt(privateKey)
         }
-        console.log(message)
         io.to(client.id).emit("message", message);
       } else {
         socket.emit("message", {
@@ -177,7 +162,7 @@ function JoinMessage(message, key) {
       color: "red",
       room: "#all",
       nickname: "Riddlet",
-      data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage(`You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`, key) : `You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`
+      data: `You have joined the ${room} room, type '/switch {#RoomName}' to switch to another room`
     })
   } else {
     socket.emit("message", {
@@ -186,7 +171,7 @@ function JoinMessage(message, key) {
       color: "red",
       nickname: "Riddlet",
       room: "#all",
-      data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage('Rooms must start with the "#" sign (ex: #default)', key) : 'Rooms must start with the "#" sign (ex: #default)'
+      data: 'Rooms must start with the "#" sign (ex: #default)'
     })
   }
 }
@@ -202,7 +187,7 @@ function LeaveMessage(message, key) {
       color: "red",
       room: "#all",
       nickname: "Riddlet",
-      data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage(`You have left the ${room} room, you have now been switched into another room`, key) : `You have left the ${room} room, you have now been switched into another room`
+      data: `You have left the ${room} room, you have now been switched into another room`
     })
   } else {
     socket.emit("message", {
@@ -211,7 +196,7 @@ function LeaveMessage(message, key) {
       color: "red",
       nickname: "Riddlet",
       room: "#all",
-      data: (serverInfo.encrypt === "true") ? require('./util').encryptMessage('Rooms must start with the "#" sign (ex: #default)', key) : 'Rooms must start with the "#" sign (ex: #default)'
+      data: 'Rooms must start with the "#" sign (ex: #default)'
     })
   }
 }
