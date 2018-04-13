@@ -22,7 +22,7 @@ var Riddlet = function(app, adapters) {
 
   var ip = require("ip")
 
-  var serverInfo = { version: 13.0, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
+  var serverInfo = { version: 14.0, title: process.env.riddlettitle || "Test Server", rooms: ["/"], maxcharlen: parseInt(process.env.maxcharlen) || 500,  ip: ip.address(), logo: process.env.logourl || "https://d30y9cdsu7xlg0.cloudfront.net/png/29558-200.png", isMod: !!adapters, encrypt: process.env.encryptMessages || "true" }
 
   io.on("connection", socket => {
     // send this no matter what, used in main menu of web app
@@ -56,17 +56,14 @@ var Riddlet = function(app, adapters) {
       function isClient(rsocket) {
         return rsocket.id === socket.id
       }
-      console.log(users)
       const user = users.find(isClient)
       var index = users.indexOf(user)
       users.splice(index, 1)
-      console.log(users)
     })
     
     socket.on("nick", function(nick) {
       if (nick.length > 0 && nick.length !== " ")
         require('./handlers/auth').RiddletSetNick(socket, nick, code)
-      console.log("nick")
     })
 
     socket.on("whisper", function(message) {
@@ -108,7 +105,6 @@ var Riddlet = function(app, adapters) {
       if (isReal) {
         const riddletMessage = require('riddlet-core').RiddletMessage
         message = new riddletMessage(message.data, message.room, jwt.decode(socket.token))
-        console.log(message)
         if (serverInfo.encrypt == "true") message.decrypt(socket.key)
 
         var messageHandler = require("./handlers/messages").RiddletMessage

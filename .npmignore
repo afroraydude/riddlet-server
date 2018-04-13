@@ -1,6 +1,7 @@
 .env
 default.realm
 .idea
+serv.js
 key.priv
 key.pub
 package-lock.json

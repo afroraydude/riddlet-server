@@ -28,7 +28,6 @@ function RiddletIdentification(token, io, socket, messages, code, serverInfo, pr
   } else {
     socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-    console.log(colorChoice);
 
     token = jwt.sign({ name: socket.name, color: colorChoice, nickname: socket.name, img: null }, code);
     socket.emit("identification", {
@@ -121,10 +120,14 @@ function RiddletSetNick(socket, nickname, code) {
   } else {
     socket.name = makeid(15);
     var colorChoice = colors[Math.floor(Math.random() * colors.length)];
-    var message = new riddletMessage('Nickname set!', "#all", serverUser)
-    if (serverInfo.encrypt === "true")
-      message.encrypt(privateKey)
-    socket.emit("message", message);
+    socket.emit("message", {
+    id: String(Date.now()),
+    client: "Server",
+    color: "red",
+    room: "#all",
+    nickname: "Riddlet",
+    data: "Nickname set!"
+    });
     token = jwt.sign({ name: decoded.name, color: decoded.color, nickname: nickname }, code);
     socket.emit("identification", {
       id: socket.name,

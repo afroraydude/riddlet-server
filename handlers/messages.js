@@ -33,7 +33,6 @@ function RiddletMessage(rio, rsocket, message, messages, rcode, rserverInfo, use
    messages.push(message)
    } else {
     */
-
   if (message.data.startsWith("/join")) {
     JoinMessage(message, privateKey)
   } else if (message.data.startsWith("/leave")) {
@@ -52,7 +51,6 @@ function NormalMessage(message, decoded, privateKey) {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
             if (serverInfo.encrypt === "true") {
               message.encrypt(privateKey)
-              console.log("sending encrypted message");
             }
             io.emit("message", message);
           } else {
@@ -87,7 +85,6 @@ function NormalMessage(message, decoded, privateKey) {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
         if (serverInfo.encrypt === "true") {
           message.encrypt(privateKey)
-          console.log("sending encrypted message")
         }
         io.emit("message", message)
       } else {
@@ -102,7 +99,6 @@ function NormalMessage(message, decoded, privateKey) {
         })
       }
     }
-    console.log(message)
 }
 
 function PrivateMessage(message, decoded, privateKey, client) {
@@ -113,10 +109,8 @@ function PrivateMessage(message, decoded, privateKey, client) {
         .then(() => {
           if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
             message = new riddletMessage(message.data, message.room, decoded)
-            console.log(message)
             if (serverInfo.encrypt === "true") {
               message.encrypt(privateKey)
-              console.log("sending encrypted message");
             }
             io.to(client.id).emit("message", message);
           } else {
@@ -143,17 +137,21 @@ function PrivateMessage(message, decoded, privateKey, client) {
             color: "red",
             room: "#all",
             nickname: "Riddlet",
-            data:
-                (serverInfo.encrypt === "true") ? require('./util').encryptMessage("You have been ratelimited, please wait 5 seconds before messaging again", privateKey) : "You have been ratelimited, please wait 5 seconds before messaging again"
+            data: "You have been ratelimited, please wait 5 seconds before messaging again"
           })
         })
     } else {
       if (message.data !== " " && message.data.length > 0 && message.data.length <= serverInfo.maxcharlen) {
-        message = new riddletMessage(message.data, message.room, decoded)
+        console.log(decoded)
+
+        message = new riddletMessage(message.data, "#all", decoded)
+
+        message.nickname += " (whisper)"
+        console.log(message)
         if (serverInfo.encrypt === "true") {
-          message.encrypt(privateKey)
-          console.log("sending encrypted message");
+          //message.encrypt(privateKey)
         }
+        console.log(message)
         io.to(client.id).emit("message", message);
       } else {
         socket.emit("message", {
@@ -162,8 +160,7 @@ function PrivateMessage(message, decoded, privateKey, client) {
           color: "red",
           room: "#all",
           nickname: "Riddlet",
-          data:
-              (serverInfo.encrypt === "true") ? require('./util').encryptMessage("Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')", privateKey) : "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
+          data: "Message is too long, the server did not send it. Contact the server admin to change the server message max character length ('maxcharlen')"
         })
       }
     }
