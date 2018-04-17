@@ -1,4 +1,5 @@
 ![logo](https://riddletchat.firebaseapp.com/static/media/logo.786543bd.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fafroraydude%2Friddlet-server.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fafroraydude%2Friddlet-server?ref=badge_shield)
 
 # riddlet-server
 
@@ -70,3 +71,7 @@ Report issues to the issues tab on GitHub (go [here](https://github.com/afrorayd
 * [ ] Custom avatars
 * [x] Private messaging
 * [ ] Notifications
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fafroraydude%2Friddlet-server.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fafroraydude%2Friddlet-server?ref=badge_large)
