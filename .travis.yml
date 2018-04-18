@@ -12,4 +12,4 @@ before_script:
 script:
   - npm test
 after_success:
-  - npx coveralls
+  - coveralls
